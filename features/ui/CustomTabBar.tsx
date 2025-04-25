@@ -1,36 +1,33 @@
-import { Tabs, TabList, TabTrigger, TabSlot } from 'expo-router/ui'
-import { Text, StyleSheet, TouchableOpacity, PressableStateCallbackType, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { PressableStateCallbackType, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import useColor from '@/features/shared/hooks/useColor'
-import Action from '@/features/action/components'
 import AntDesign from '@expo/vector-icons/AntDesign'
-import CustomLayout from '@/features/ui/CustomLayout'
+import { useNavigation, useRouter } from 'expo-router'
+import Action from '@/features/action/components'
 
-// Defining the layout of the custom tab navigator
-export default function Layout() {
+const CustomTabBar = () => {
   const styles = useStyle()
+  const navigation = useNavigation()
+  const router = useRouter()
   return (
-    <Tabs>
-      <CustomLayout title={'Lullio baby tracker'}>
-        <TabSlot />
-      </CustomLayout>
-      <TabList style={styles.list}>
-        <Action.NavBarButton />
-        <TabTrigger style={(state) => useStyle({ state }).button} name="home" href="/">
+    <View style={{ position: 'relative' }}>
+      <Action.NavBarButton />
+      <View style={styles.list}>
+        <TouchableOpacity style={useStyle().button} onPress={() => { router.push('/') }}>
           <AntDesign name="calendar" size={32} color={useColor('primary')['main-revert']} />
           <Text style={styles.buttonText}>Home</Text>
-        </TabTrigger>
-        <TabTrigger style={(state) => useStyle({ state }).button} name="stats" href="/stats">
+        </TouchableOpacity>
+        <TouchableOpacity style={useStyle().button} onPress={() => router.push('/test')}>
           <AntDesign name="barchart" size={32} color={useColor('primary')['main-revert']} />
           <Text style={styles.buttonText}>Stats</Text>
-        </TabTrigger>
-      </TabList>
-    </Tabs>
+        </TouchableOpacity>
+      </View>
+    </View>
   )
 }
 
+export default CustomTabBar
+
 const useStyle = (props: { state?: PressableStateCallbackType } = {}) => {
-  const insets = useSafeAreaInsets()
   return StyleSheet.create({
     list: {
       paddingLeft: 16,
@@ -39,7 +36,6 @@ const useStyle = (props: { state?: PressableStateCallbackType } = {}) => {
       justifyContent: 'space-around',
       display: 'flex',
       flexDirection: 'row',
-      position: 'relative',
     },
     button: {
       paddingTop: 24,
